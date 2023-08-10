@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Quart",
+            "type": "python",
+            "request": "launch",
+            "module": "hypercorn",
+            "args": [
+                "run:app",
+                "--reload"
+            ],
+            "jinja": true,
+        },
+    ]
+}

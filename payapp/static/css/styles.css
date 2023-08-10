@@ -1,0 +1,53 @@
+.custom-select {
+    width: 200px; /* Adjust as per requirement */
+    margin: 0 auto;
+}
+
+#phone {
+    width: 180px;  /* Adjust based on aesthetics */
+}
+/* Enhance the title appearance */
+
+h3 {
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* Add some spacing and a subtle border to the image */
+.card-registration img {
+    margin: 15px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Bolden the form labels */
+.form-label {
+    font-weight: bold;
+}
+
+::placeholder { 
+    color: grey;
+    opacity: 0.5; 
+}
+
+:-ms-input-placeholder { 
+    color: grey;
+    opacity: 0.5; 
+}
+
+::-ms-input-placeholder { 
+    color: grey;
+    opacity: 0.5; 
+}
+
+.error-input {
+    border: 1px solid red;
+    background-color: #ffe6e6;  /* Light red */
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 5px;
+    display: block;
+}
