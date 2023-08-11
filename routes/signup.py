@@ -27,13 +27,25 @@ async def success_page():
 
 @signup_bp.route('/check-email', methods=['POST'])
 async def check_email():
-    email = request.json.get('email')
+    json_data: dict = await request.json
+    email = json_data.get('email')
     query_executor = Queries(current_app.user_database)
     
     email_already_taken = await email_exists(query_executor, email)
     if email_already_taken:
         return jsonify({"email_taken": True})
     return jsonify({"email_taken": False})
+
+@signup_bp.route('/check-phone', methods=['POST'])
+async def check_phone():
+    json_data: dict = await request.json
+    phone = json_data.get('phone')
+    query_executor = Queries(current_app.user_database)
+    
+    phone_already_taken = await phone_exists(query_executor, phone)
+    if phone_already_taken:
+        return jsonify({"phone_taken": True})
+    return jsonify({"phone_taken": False})
 
 async def email_exists(query_executor: Queries, email):
     exists = await query_executor.get_user_by_email(email)

@@ -1,5 +1,6 @@
 # standard
 import logging
+from functools import wraps
 
 # third-party
 import asyncpg
@@ -20,6 +21,7 @@ class DeletionError(DatabaseError):
     """Raised when there's an error deleting data from the database"""
 
 def query_error(func):
+    @wraps(func)
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
