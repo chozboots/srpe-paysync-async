@@ -1,1 +1,1 @@
-from .payloadFormatters import User, Login, format_value
+from .payloadFormatters import User, Login_Info, Stripe_Session_Info, format_value

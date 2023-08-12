@@ -16,8 +16,8 @@ load_dotenv(find_dotenv())
 success_url = os.environ.get('SUCCESS_URL')
 
 @object_error
-def create_customer(user: User):
-    return stripe.Customer.create(
+async def create_customer(user: User):
+    return await stripe.Customer.create(
         name=', '.join([user.last_name, user.first_name]),
         email=user.email,
         phone=user.phone,
@@ -31,8 +31,8 @@ def create_customer(user: User):
     )
 
 @object_error
-def create_session(customer: stripe.Customer):
-    return stripe.checkout.Session.create(
+async def create_session(customer: stripe.Customer):
+    return await stripe.checkout.Session.create(
         customer=customer.id,
         payment_method_types=['us_bank_account'],
         mode='setup',

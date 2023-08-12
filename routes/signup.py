@@ -7,10 +7,11 @@ from quart import Blueprint, request, current_app, jsonify
 from quart import render_template, redirect, url_for
 
 # local
-from database.formatters import User, Login
+from database.formatters import User, Login_Info
 from database import Queries
 from errorHandlers.database import InsertionError
 from database.utils import hash_password
+from myStripe import create_customer
 
 logger = logging.getLogger(__name__)
 
@@ -105,10 +106,13 @@ async def create_customer_route():
             'state': data.get('state'),
             'zip_code': data.get('zip_code')
         })
+        
         user_id = await query_executor.insert_user(user)
+        
+        
 
         hashed_password = hash_password(data.get('password'))
-        login = Login(hashed_password, user_id)
+        login = Login_Info(hashed_password, user_id)
         await query_executor.insert_login(login)
         logger.info(f"\n\n\nUser has been inserted.\n\n")
         
