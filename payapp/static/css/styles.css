@@ -1,48 +1,50 @@
+/* Adjust the widths of input fields */
 .custom-select {
-    width: 200px; /* Adjust as per requirement */
+    width: 250px; /* Wider for select fields */
     margin: 0 auto;
 }
 
 #phone {
-    width: 180px;  /* Adjust based on aesthetics */
+    width: 210px; /* Wider for phone number field */
+    text-align: center; 
 }
-/* Enhance the title appearance */
 
+#zipCode {
+    width: 110px;
+    text-align: center;
+}
+
+/* Enhance the title appearance */
 h3 {
     font-size: 2.5rem;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    /* Removed text-shadow */
 }
 
 /* Add some spacing and a subtle border to the image */
 .card-registration img {
     margin: 15px;
     border: 2px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Removed box-shadow */
 }
 
-/* Bolden the form labels */
-.form-label {
-    font-weight: bold;
-}
-
-::placeholder { 
+::placeholder {
     color: grey;
-    opacity: 0.5; 
+    opacity: 0.5;
 }
 
-:-ms-input-placeholder { 
+:-ms-input-placeholder {
     color: grey;
-    opacity: 0.5; 
+    opacity: 0.5;
 }
 
-::-ms-input-placeholder { 
+::-ms-input-placeholder {
     color: grey;
-    opacity: 0.5; 
+    opacity: 0.5;
 }
 
 .error-input {
     border: 1px solid red;
-    background-color: #ffe6e6;  /* Light red */
+    background-color: #ffe6e6;
 }
 
 .error-message {

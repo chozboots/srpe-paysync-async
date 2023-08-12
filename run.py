@@ -20,4 +20,8 @@ logging.basicConfig(
 
 from payapp import app
 
-app.run(debug=True if ENVIRONMENT == "development" else False)
+app.run(
+    debug=True if ENVIRONMENT == "development" else False,
+    host="0.0.0.0",
+    port=8000
+)

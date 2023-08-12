@@ -1,11 +1,19 @@
 const form = document.getElementById('userRegistrationForm');
 
-// Load saved data from local storage when the page loads
+// Check if the "error" query parameter is present in the URL
+function hasErrorOccurred() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.has('error-input');
+}
+
+// Load saved data from local storage when the page loads due to an error
 window.addEventListener('load', function() {
-    const savedData = JSON.parse(localStorage.getItem('formData'));
-    if (savedData) {
-        for (let key in savedData) {
-            form[key].value = savedData[key];
+    if (hasErrorOccurred()) {
+        const savedData = JSON.parse(localStorage.getItem('formData'));
+        if (savedData) {
+            for (let key in savedData) {
+                form[key].value = savedData[key];
+            }
         }
     }
 });

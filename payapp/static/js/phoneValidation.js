@@ -6,12 +6,36 @@ document.addEventListener("DOMContentLoaded", function() {
     $(phoneField).inputmask({"mask": "(999) 999-9999"});
 
     phoneField.addEventListener("blur", function() {
-        // Once the phone input loses focus, it checks if the phone number is taken
-        if (phoneField.value) {
+        // Check the format of the phone number
+        validatePhoneDetailed(phoneField, phoneError);
+
+        // If there's no error-input class, then we check if the phone number is taken.
+        if (phoneField.value && !phoneField.classList.contains('error-input')) {
             checkPhoneTaken(phoneField, phoneError);
         }
     });
 });
+
+function validatePhoneDetailed(phoneField, errorMessageElement) {
+    // Clear previous states
+    phoneField.setCustomValidity('');
+    phoneField.classList.remove('error-input');
+    errorMessageElement.textContent = '';
+
+    const phoneRegex = /^\(\d{3}\) \d{3}-\d{4}$/;
+    
+    if (phoneField.value === '') {
+        return;  // Exit early if the field is empty
+    }
+
+    if (!phoneRegex.test(phoneField.value)) {
+        phoneField.setCustomValidity('Invalid phone number format.');
+        phoneField.classList.add('error-input');
+        errorMessageElement.textContent = 'Invalid phone number format.';
+    }
+}
+
+// The checkPhoneTaken function remains the same as in your original code
 
 function checkPhoneTaken(phoneField, errorMessageElement) {
     // Clear any previous custom validity messages

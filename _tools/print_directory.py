@@ -1,10 +1,7 @@
 # standard
 import os
 
-# dev
-from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
-
+os.mkdir('./app')
 
 def print_directory_contents(path, indent=""):
     for child in os.listdir(path):
@@ -17,8 +14,5 @@ def print_directory_contents(path, indent=""):
         else:
             print(f"{indent}{child}")
 
-# Set the target directory
-target_directory = os.environ.get("LOCAL_PATH")
-
 # Print the file structure for the directory
-print_directory_contents(target_directory)
+print_directory_contents(os.getcwd())

@@ -22,7 +22,6 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 
-# setup logger
 logger = logging.getLogger(__name__)
 
 # envs
@@ -67,24 +66,28 @@ except Exception as e:
     logger.error("Missing one or more crucial environmental variables.")
     raise Exception("Missing one or more crucial environmental variables.") from None
 
-# start quart server
+# setup
 logger.info('Starting the application...')
 app = Quart(__name__)
+rate_limiter = RateLimiter(app)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(signup_bp)
 
-# cors
 cors(app)  # this will enable CORS for all routes
 
-# setup database
 app.user_database = UnionDatabase()
 
-# setup jwt
 app.config['JWT_SECRET_KEY'] = jwt_secret_key
 jwt = JWTManager(app)
 
-# instantiate UnionDatabase
+# instantiate database
 user_database = app.user_database
+
+# rate limiter (redis)
+redis_store = RedisStore(
+    address="redis://localhost:6379/0",  # Replace with your Redis URL
+    prefix="ratelimit:"  # Prefix to distinguish rate limiting keys in Redis
+)
 
 # general routes
 @app.route('/')

@@ -1,0 +1,38 @@
+# The current Docker functionality is only intended for local use.
+# Therefore, all public access is only through GitHub.
+# .gitignore ensures the proper files aren't loaded
+# Although envs are used in the setup files, this is dependent on your local env which isn't present in the repo.
+# If deploying a containerized version, use this layout as a starting point, and add all necessary files as you go.
+
+# Git
+.git
+.gitignore
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+
+# Virtual environments
+venv/
+*.venv/
+env/
+
+# Logs
+*.log
+
+# Config files that might contain secrets
+.env
+
+# OS generated
+.DS_Store
+Thumbs.db
+
+# IDE - Depending on what you're using
+.idea/
+.vscode/
+
+# Build artifacts
+build/
