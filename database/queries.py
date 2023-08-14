@@ -5,7 +5,7 @@ import logging
 from asyncpg import Connection
 
 # local
-from database.formatters import User, Login
+from database.formatters import User, Login_Info
 from errorHandlers.database import query_error
 
 
@@ -30,7 +30,7 @@ class Queries:
         return result[0]['user_id'] if result else None
 
     @query_error
-    async def insert_login(self, login: Login):
+    async def insert_login(self, login: Login_Info):
         query = """INSERT INTO login_info (user_id, password_hash) 
                    VALUES ($1, $2)"""
         await self.execute_query(query, login.user_id, login.password_hash)

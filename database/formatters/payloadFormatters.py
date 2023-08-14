@@ -1,47 +1,29 @@
 # standard
-from datetime import datetime
 import logging
 
 # local
 from database.utils import hash_password
 
-# third-party
-import pytz
-
-
 logger = logging.getLogger(__name__)
 
-def format_value(value, key=None) -> str:
-    if isinstance(value, str):
-        if "@" in value:  # email
-            return value.lower()
-        elif " " in value:  # address
-            return value.title()
-        elif key == 'state':  # state
-            return value.upper()
-        else:
-            return value.title()  # name
-    else:
+def format_value(value, key=None):
+    if value is None:  # Handling None values
+        return None
+    
+    if not isinstance(value, str):  # Handling non-string types
         return value
+    
+    value = value.strip()  # Stripping whitespace
 
-logger = logging.getLogger(__name__)
-
-async def _get_time(data: dict):
-    try:
-        cst_tz = pytz.timezone('America/Chicago')
-        if data.get('registered'):
-            registered = data['registered']
-        else:
-            registered = datetime.now(cst_tz)
-    except pytz.UnknownTimeZoneError as e:
-        logger.error("Unknown timezone encountered while creating user.")
-        registered = None
-        raise e
-    except Exception as e:
-        logger.error("An error occurred while setting registered time.")
-        registered = None
-        raise e
-    return registered
+    # After stripping, proceed with the formatting
+    if "@" in value:  # email
+        return value.lower()
+    elif " " in value:  # address
+        return value.title()
+    elif key == 'state':  # state
+        return value.upper()
+    else:
+        return value.title()  # name
 
 class User:
     def __init__(self, data: dict):
@@ -54,12 +36,11 @@ class User:
         self.city = format_value(data['city'])
         self.state = format_value(data['state'], 'state')
         self.zip_code = format_value(data['zip_code'])
-        self.registered = _get_time(data)
             
 class Login_Info:
     def __init__(self, user_id: int, password: str):
         self.password_hash = hash_password(password)
-        self.user_id = user_id # FK from users
+        self.user_id = user_id  # FK from users
         
 class Stripe_General_Info:
     def __init__(self, user_id: int, customer_id: str):
@@ -68,20 +49,17 @@ class Stripe_General_Info:
         
         self.payment_method = None
         self.last4 = None
-        self.expiration = None # null if not card
-        self.has_funds = None # null if not applicable, bool otherwise
+        self.expiration = None  # null if not card
+        self.has_funds = None  # null if not applicable, bool otherwise
 
 class Stripe_Session_Info:
     def __init__(self, user_id: int, customer_id: str):
-        self.user_id = user_id # FK from users
+        self.user_id = user_id  # FK from users
         self.customer_id = customer_id
         
         self.token = None 
         # allows access to links from dashboard, uses jwt tokens
         self.checkout_status = None
         self.checkout_link = None
-        self.checkout_link_expires = None # expiration date
-        self.payment_status = None # mainly used for micro-deposit tracking
-        
-        
-        
+        self.checkout_link_expires = None  # expiration date
+        self.payment_status = None  # mainly used for micro-deposit tracking
