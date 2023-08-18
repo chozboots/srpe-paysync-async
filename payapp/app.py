@@ -86,7 +86,7 @@ user_database = app.user_database
 # rate limiter (redis)
 redis_store = RedisStore(
     address="redis://localhost:6379/0",  # Replace with your Redis URL
-    prefix="ratelimit:"  # Prefix to distinguish rate limiting keys in Redis
+    rate_limiter = RateLimiter(app)
 )
 
 # general routes
