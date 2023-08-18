@@ -109,6 +109,8 @@ async def create_customer_route():
         
         user_id = await query_executor.insert_user(user)
         
+        customer_id = create_customer(user)
+        
         
 
         hashed_password = hash_password(data.get('password'))
