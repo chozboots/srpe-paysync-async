@@ -2,7 +2,6 @@
 import os
 import logging
 from urllib.parse import urlparse
-from datetime import timedelta
 
 # third-party
 from quart import Quart, redirect, url_for

@@ -3,8 +3,7 @@ import logging
 import traceback
 
 # third-party
-from quart import Blueprint, request, current_app, jsonify
-from quart import render_template, redirect, url_for
+from quart import Blueprint, request, current_app, jsonify, render_template, redirect, url_for
 
 # local
 from database.formatters import User, Login_Info
@@ -14,39 +13,11 @@ from database.utils import hash_password
 from myStripe import create_customer
 
 logger = logging.getLogger(__name__)
-
 signup_bp = Blueprint('signup', __name__)
 
-# template routes
-@signup_bp.route('/', methods=['GET'])
-async def show_form():
-    return await render_template('userForm.html')
-
-@signup_bp.route('/submission_success', methods=['GET'])
-async def success_page():
-    return await render_template('home.html')
-
-@signup_bp.route('/check-email', methods=['POST'])
-async def check_email():
-    json_data: dict = await request.json
-    email = json_data.get('email')
-    query_executor = Queries(current_app.user_database)
-    
-    email_already_taken = await email_exists(query_executor, email)
-    if email_already_taken:
-        return jsonify({"email_taken": True})
-    return jsonify({"email_taken": False})
-
-@signup_bp.route('/check-phone', methods=['POST'])
-async def check_phone():
-    json_data: dict = await request.json
-    phone = json_data.get('phone')
-    query_executor = Queries(current_app.user_database)
-    
-    phone_already_taken = await phone_exists(query_executor, phone)
-    if phone_already_taken:
-        return jsonify({"phone_taken": True})
-    return jsonify({"phone_taken": False})
+# -------------------
+# Utility functions
+# -------------------
 
 async def email_exists(query_executor: Queries, email):
     exists = await query_executor.get_user_by_email(email)
@@ -60,15 +31,48 @@ async def render_error_template(message: str):
     """Utility function to render the userForm with an error message."""
     return await render_template('userForm.html', error=message), 400
 
-# process routes
+
+# -------------------
+# Template Routes
+# -------------------
+
+@signup_bp.route('/', methods=['GET'])
+async def show_form():
+    return await render_template('userForm.html')
+
+@signup_bp.route('/submission_success', methods=['GET'])
+async def success_page():
+    return await render_template('home.html')
+
+
+# -------------------
+# API Routes
+# -------------------
+
+@signup_bp.route('/check-email', methods=['POST'])
+async def check_email():
+    json_data: dict = await request.json
+    email = json_data.get('email')
+    query_executor = Queries(current_app.user_database)
+    
+    email_already_taken = await email_exists(query_executor, email)
+    return jsonify({"email_taken": email_already_taken})
+
+@signup_bp.route('/check-phone', methods=['POST'])
+async def check_phone():
+    json_data: dict = await request.json
+    phone = json_data.get('phone')
+    query_executor = Queries(current_app.user_database)
+    
+    phone_already_taken = await phone_exists(query_executor, phone)
+    return jsonify({"phone_taken": phone_already_taken})
+
 @signup_bp.route('/create_customer', methods=['POST'])
 async def create_customer_route():
-    # get shared database
     user_database = current_app.user_database
     
     logger.info("\n\nReceived form request.\n")
 
-    # get form data
     data = await request.form
 
     try:
@@ -80,13 +84,11 @@ async def create_customer_route():
         if password != confirm_password:
             return await render_error_template('Passwords do not match.')
         
-        # Utility function to reduce redundancy
         async def check_exists(check_function, field, error_msg):
             if await check_function(query_executor, data.get(field)):
                 return await render_error_template(error_msg)
             return None
 
-        # Check if email or phone already exist
         response = await check_exists(email_exists, 'email', 'Email already exists.')
         if response:
             return response
@@ -108,17 +110,19 @@ async def create_customer_route():
         })
         
         user_id = await query_executor.insert_user(user)
-        
-        customer_id = create_customer(user)
-        
-        
+
+        customer_data = await create_customer(user)
+        customer_id = customer_data.id
+
+        await query_executor.update_user_customer_id(user_id, customer_id)
 
         hashed_password = hash_password(data.get('password'))
-        login = Login_Info(hashed_password, user_id)
+        login = Login_Info(user_id, hashed_password)
+        
         await query_executor.insert_login(login)
+        
         logger.info(f"\n\n\nUser has been inserted.\n\n")
         
-        # Redirect to a success page or back to the form with a success message
         return redirect(url_for('signup.success_page')) 
 
     except InsertionError as e:

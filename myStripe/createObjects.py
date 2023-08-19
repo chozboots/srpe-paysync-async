@@ -1,22 +1,25 @@
 # standard
 import os
+from typing import TYPE_CHECKING
 
 # third-party
 import stripe
 
 # local
 from errorHandlers.stripe import object_error
-from database.formatters import User
 
 # dev
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 
+if TYPE_CHECKING:
+    from database.formatters import User
+
 success_url = os.environ.get('SUCCESS_URL')
 
 @object_error
-async def create_customer(user: User):
+async def create_customer(user: 'User'):
     return await stripe.Customer.create(
         name=', '.join([user.last_name, user.first_name]),
         email=user.email,
@@ -38,3 +41,4 @@ async def create_session(customer: stripe.Customer):
         mode='setup',
         success_url=success_url,
     )
+    

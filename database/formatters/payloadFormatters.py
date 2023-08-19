@@ -4,6 +4,7 @@ import logging
 # local
 from database.utils import hash_password
 
+
 logger = logging.getLogger(__name__)
 
 def format_value(value, key=None):
@@ -39,8 +40,8 @@ class User:
             
 class Login_Info:
     def __init__(self, user_id: int, password: str):
-        self.password_hash = hash_password(password)
         self.user_id = user_id  # FK from users
+        self.password_hash = hash_password(password)
         
 class Stripe_General_Info:
     def __init__(self, user_id: int, customer_id: str):
@@ -51,15 +52,3 @@ class Stripe_General_Info:
         self.last4 = None
         self.expiration = None  # null if not card
         self.has_funds = None  # null if not applicable, bool otherwise
-
-class Stripe_Session_Info:
-    def __init__(self, user_id: int, customer_id: str):
-        self.user_id = user_id  # FK from users
-        self.customer_id = customer_id
-        
-        self.token = None 
-        # allows access to links from dashboard, uses jwt tokens
-        self.checkout_status = None
-        self.checkout_link = None
-        self.checkout_link_expires = None  # expiration date
-        self.payment_status = None  # mainly used for micro-deposit tracking

@@ -1,8 +1,11 @@
+# standard
 import logging
 import os
 
+# third-party
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
+
 
 ENVIRONMENT = os.environ.get('LOGGER_ENV')
 
