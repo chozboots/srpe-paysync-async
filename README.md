@@ -2,7 +2,14 @@
 
 > **Note:** This README is currently in a drafting phase and may be subject to changes. While efforts have been made to ensure accuracy, there might be discrepancies. Always refer to the actual code or configuration files for the most up-to-date information.
 
-An asynchronous version of SRPE PaySync, rebuilt with Quart to use the Stripe API for better scalability and adaptability.
+A newer version of SRPE PaySync that has been rebuilt with asynchronous programming tools, such as Quart. Like its preceding model, this version of PaySync aims to:
+- Monitor the Stripe payment process
+- Provide real-time updates to staff on payment issues
+- Allow users to register payment methods with their union membership accounts
+
+It also provides new features such as:
+- Micro-deposit verification process emails (lets customers know what stage their bank registration is in)
+- A log-in dashboard to manage payment methods and view former payments
 
 ## Project Goals:
 
